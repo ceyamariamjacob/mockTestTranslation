@@ -1,0 +1,27 @@
+{
+  "type": "module",
+  "name": "mock",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "devDependencies": {
+    "@types/jsdom": "^21.1.7",
+    "@types/mocha": "^10.0.10",
+    "@types/node": "^22.15.29",
+    "jsdom": "^26.1.0",
+    "mocha": "^11.5.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.8.3",
+    "puppeteer": "^24.10.0"
+  },
+  "dependencies": {
+    "chai": "^5.2.0",
+    "puppeteer": "^24.10.0"
+  }
+}

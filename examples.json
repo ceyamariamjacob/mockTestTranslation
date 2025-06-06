@@ -1,0 +1,42 @@
+[
+  {
+    "instruction": "Open the homepage and check if the title contains 'Welcome'",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Homepage Title', () => {\n  it('should contain Welcome in the title', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000');\n    const title = await page.title();\n    if (!title.includes('Welcome')) throw new Error('Title does not contain Welcome');\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Navigate to login page and ensure the username field is visible",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Login Page', () => {\n  it('should show the username field', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000/login');\n    const visible = await page.$eval('#username', el => !!el);\n    if (!visible) throw new Error('Username field not visible');\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Submit the contact form with dummy data",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Contact Form', () => {\n  it('should submit the form', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000');\n    await page.type('#fullname', 'Test User');\n    await page.type('#email', 'test@example.com');\n    await page.type('#message', 'Hello from test');\n    await page.click('button');\n    await page.waitForTimeout(1000);\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Check that the login button is disabled until both fields are filled",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Login Button Behavior', () => {\n  it('should enable button only after filling fields', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000');\n    const isDisabled = await page.$eval('button', el => el.disabled);\n    if (!isDisabled) throw new Error('Button should be disabled initially');\n    await page.type('#username', 'user');\n    await page.type('#password', 'pass');\n    const stillDisabled = await page.$eval('button', el => el.disabled);\n    if (stillDisabled) throw new Error('Button should be enabled after input');\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Check if error alert appears on wrong credentials",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Login Failure', () => {\n  it('should show alert on invalid login', async () => {\n    const browser = await puppeteer.launch({ headless: false });\n    const page = await browser.newPage();\n    page.on('dialog', async dialog => {\n      await dialog.dismiss();\n    });\n    await page.goto('http://localhost:3000');\n    await page.type('#username', 'wrong');\n    await page.type('#password', 'wrong');\n    await page.click('button');\n    await page.waitForTimeout(1000);\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Ensure the message field has a max length attribute",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Message Field', () => {\n  it('should have maxlength attribute', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000');\n    const maxLength = await page.$eval('#message', el => el.getAttribute('maxlength'));\n    if (!maxLength) throw new Error('No maxlength attribute');\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Ensure the form resets after submission",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Form Reset', () => {\n  it('should clear fields after submit', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000');\n    await page.type('#fullname', 'Reset User');\n    await page.type('#email', 'reset@example.com');\n    await page.type('#message', 'Reset this form');\n    await page.click('button');\n    await page.waitForTimeout(2000);\n    const name = await page.$eval('#fullname', el => el.value);\n    if (name !== '') throw new Error('Form did not reset');\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Verify the background is a gradient",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Background Gradient', () => {\n  it('should use a gradient background', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000');\n    const bg = await page.evaluate(() => getComputedStyle(document.body).backgroundImage);\n    if (!bg.includes('gradient')) throw new Error('No gradient background');\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Check if form submission shows a success message",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Success Message', () => {\n  it('should display success after form submit', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000');\n    await page.type('#fullname', 'Success User');\n    await page.type('#email', 'success@example.com');\n    await page.type('#message', 'Checking success');\n    await page.click('button');\n    await page.waitForSelector('#successMsg');\n    const msg = await page.$eval('#successMsg', el => el.textContent || '');\n    if (!msg.includes('successfully')) throw new Error('Success message not shown');\n    await browser.close();\n  });\n});"
+  },
+  {
+    "instruction": "Verify password input is type=password",
+    "test": "import puppeteer from 'puppeteer';\ndescribe('Password Field', () => {\n  it('should be of type password', async () => {\n    const browser = await puppeteer.launch();\n    const page = await browser.newPage();\n    await page.goto('http://localhost:3000');\n    const type = await page.$eval('#password', el => el.type);\n    if (type !== 'password') throw new Error('Password input is not type=password');\n    await browser.close();\n  });\n});"
+  }
+]
