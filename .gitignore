@@ -180,4 +180,5 @@ build/
 out/
 .cache/
 *.tsbuildinfo
+hitl_memory
 
