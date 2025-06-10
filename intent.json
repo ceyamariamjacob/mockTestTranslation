@@ -1,0 +1,64 @@
+{
+    "predict": {
+        "traces": [],
+        "train": [],
+        "demos": [],
+        "signature": {
+            "instructions": "Given a user's natural language input describing their GPU compute needs, analyze the text to extract structured information. Your task is to identify and output the following parameters: reasoning behind the request, the primary use case (e.g., AI training, inference, data processing), required performance level (high, medium, low), any budget hints, specific technical requirements mentioned, GPU preferences, memory needs, storage needs, desired features, and urgency of deployment. Provide a clear and detailed response that captures all necessary elements for effective GPU configuration.",
+            "fields": [
+                {
+                    "prefix": "Input Text:",
+                    "description": "The user's natural language input describing their compute needs"
+                },
+                {
+                    "prefix": "Reasoning: Let's think step by step in order to",
+                    "description": "${reasoning}"
+                },
+                {
+                    "prefix": "Use Case:",
+                    "description": "Primary use case (e.g., AI training, inference, data processing, general compute)"
+                },
+                {
+                    "prefix": "Performance Level:",
+                    "description": "Required performance (high, medium, low, enterprise, standard, lite)"
+                },
+                {
+                    "prefix": "Budget Hints:",
+                    "description": "Any budget considerations mentioned"
+                },
+                {
+                    "prefix": "Specific Requirements:",
+                    "description": "Comma-separated list of specific technical requirements mentioned"
+                },
+                {
+                    "prefix": "Gpu Preference:",
+                    "description": "Any specific GPU mentioned (e.g., H100, A100, T4)"
+                },
+                {
+                    "prefix": "Memory Needs:",
+                    "description": "Memory requirements if mentioned"
+                },
+                {
+                    "prefix": "Storage Needs:",
+                    "description": "Storage requirements if mentioned"
+                },
+                {
+                    "prefix": "Features Needed:",
+                    "description": "Comma-separated list of specific features requested (e.g., Kubernetes, monitoring, backup)"
+                },
+                {
+                    "prefix": "Urgency:",
+                    "description": "Deployment urgency (immediate, standard, flexible)"
+                }
+            ]
+        },
+        "lm": null
+    },
+    "metadata": {
+        "dependency_versions": {
+            "python": "3.12",
+            "dspy": "2.6.27",
+            "cloudpickle": "3.1"
+        }
+    }
+}

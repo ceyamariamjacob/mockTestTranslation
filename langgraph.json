@@ -1,7 +1,7 @@
 {
   "dependencies": ["."],
   "graphs": {
-    "agent": "./flow.py:graph"
+    "agent": "./reflection.py:graph"
   },
   "env": ".env",
   "image_distro": "wolfi"

@@ -73,3 +73,22 @@ npx mocha test/<testfile>
 ->AgentInbox integration (interrupt usage)
 ->test validation logic to be reviewed
 
+
+## 6/10 Setup for reflection + hitl node 
+start running the graph:
+```
+langgraph dev
+```
+
+click submit on the graph in langsmith studio, and start the run to generate reflection and output, for the trace (which I have hardcoded for now)
+
+While in interrupted state (Human node), head over to [AgentInbox](dev.agentinbox.ai), and add a new inbox with following details:
+1. Graph ID: `agent`
+2. Deployment URL: `http://127.0.0.1:2024`
+3. Name: (any name of your choice)
+
+Here, you can handle the interrupt (Accept/ Edit: edit the response manually/ Ignore)
+
+On accepting, the output generated will be written back into `intent.json` file's `demo` field, and the initial trace will be recorded in `traces` field as well.
+
+Note: Edit functionality has more work to be done
