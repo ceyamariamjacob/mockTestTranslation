@@ -82,7 +82,7 @@ langgraph dev
 
 click submit on the graph in langsmith studio, and start the run to generate reflection and output, for the trace (which I have hardcoded for now)
 
-While in interrupted state (Human node), head over to [AgentInbox](dev.agentinbox.ai), and add a new inbox with following details:
+While in interrupted state (Human node), head over to [AgentInbox](https://dev.agentinbox.ai/), and add a new inbox with following details:
 1. Graph ID: `agent`
 2. Deployment URL: `http://127.0.0.1:2024`
 3. Name: (any name of your choice)
