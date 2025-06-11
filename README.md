@@ -91,4 +91,7 @@ Here, you can handle the interrupt (Accept/ Edit: edit the response manually/ Ig
 
 On accepting, the output generated will be written back into `intent.json` file's `demo` field, and the initial trace will be recorded in `traces` field as well.
 
-Note: Edit functionality has more work to be done
+*(6/11) Update:*
+
+- [x] Edit functionality fixed: The generated output can be edited by the user, and on clicking `Accept`, the edited output is written into 'intent.json'.
+- [x] Response functionality added: User can give a feedback to the output generated, and on clicking `Respond`, the output gets regenerated, and can be reviewed (accept/edit/respond/ignore) by the user further.

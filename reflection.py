@@ -1,4 +1,4 @@
-from langgraph.graph import StateGraph, END
+from langgraph.graph import StateGraph, END, START
 from typing import Optional, TypedDict, Literal, Union
 from langchain_ollama import ChatOllama
 import json, uuid
@@ -29,9 +29,8 @@ trace={
         ],
         "urgency": "{'anyOf': [{'type': 'string'}, {'type': 'null'}]}"
     }
-
 }
-
+human_response=""
 
 # Output format
 class Intent(TypedDict):
@@ -90,9 +89,10 @@ def generate_reflection(state:Intent) -> Intent:
     '''
 
     response=llm.invoke(prompt)
+    print("\n\ngenerating reflections donee---")
     return response
 
-# todo : fix edit-response node
+# generate new reflection (Intent) based on human response during interrupt
 def generate_edited_reflection(state:Intent) -> Intent:
 
     print("\nGENERATING EDITED REFLECTION\n")
@@ -102,16 +102,20 @@ def generate_edited_reflection(state:Intent) -> Intent:
     reasoning behind the request, the primary use case (e.g., AI training, inference, data processing), required performance level (high, medium, low),
     any budget hints, specific technical requirements mentioned, GPU preferences, memory needs, storage needs, desired features, and urgency of deployment.
     Provide a clear and detailed response that would be better than the trace and reflection provided below, and that captures all necessary elements for effective GPU configuration.
+    The user has responded with: {human_response}
 
     trace: {trace}
+
     reflection generated previously: {state}
     '''
 
     response=llm.invoke(prompt)   
+    print("\n\ngenerating edited reflections donee---")
     return response
 
 
-def human_node(state: Intent):
+def human_node(state: Intent)->Command[Literal["finish","edit_reflection"]]:
+    global human_response
     print("\nHUMAN INTERRUPT\n")
     #Create an interrupt
     request: HumanInterrupt = {
@@ -121,21 +125,36 @@ def human_node(state: Intent):
         },
         "config": {
             "allow_ignore": True,
-            "allow_respond": False,
+            "allow_respond": True,
             "allow_edit": True,
             "allow_accept": True
         },
-        "description": None # Generate a detailed markdown description.
+        "description": None #Generate a detailed markdown description.
     }
 
-    # Send the interrupt request, and extract the first response.
-    response = interrupt(request)
-    if response[0]['type'] == "accept":
-        return Command(goto='finish')
-    elif response[0]['type'] == "edit":
-        return Command(goto='finish')
-    elif response[0]['type']=="ignore":
-        return Command(goto=END)
+    #Send the interrupt request, and extract the first response.
+    while True:
+        response = interrupt(request)
+        if(response!=""):
+            print("\n\nresponse: ",response)
+            if response[0]['type'] == "accept":
+                # writes back the output into 'demo' of in
+                print("\nACCEPTED\n")
+                return Command(goto='finish')
+            elif response[0]['type']=="response":
+                # goes ro 'edit_reflection', and generates new reflection
+                print("\nRESPONDED\n")
+                human_response=response[0]['args']
+                return Command(goto='edit_reflection')
+            elif response[0]['type'] == "edit":
+                print("\nEDITED\n")
+                state=Intent(response[0]['args']['args'])
+                return Command(goto='finish',update=state)
+            elif response[0]['type']=="ignore":
+                print("\nIGNORED\n")
+                return Command(goto=END)
+        else:
+            print("\nNO RESPONSE\nRESUMING INTERRUPT\n")
 
 #Final node after accept
 def writeback(state: Intent):
@@ -149,9 +168,11 @@ def writeback(state: Intent):
 
     with open('intent.json', 'w') as file:
         json.dump(intent_output,file,indent=4)
+    print("\nDONE WRITING BACK\n")
     return state
+    
 
-        
+
 llm=ChatOllama(model="llama3.2:latest").with_structured_output(Intent)    
 
 graph_builder=StateGraph(Intent)
@@ -161,7 +182,8 @@ graph_builder.add_node('human',human_node)
 graph_builder.add_node('edit_reflection',generate_edited_reflection)
 graph_builder.add_node('finish',writeback)
 
-graph_builder.set_entry_point('reflect')
+
+graph_builder.add_edge(START,'reflect')
 graph_builder.add_edge('reflect','human')
 graph_builder.add_edge('edit_reflection','human')
 graph_builder.add_edge('finish',END)
@@ -169,7 +191,10 @@ graph=graph_builder.compile()
 
 state = Intent()
 config={"configurable":{"thread_id":uuid.uuid4()}}
+print("\nINVOKING GRAPH\n")
 result=graph.invoke(state)
+print("\nDONE W GRAPH\n")
+
 
 
 
