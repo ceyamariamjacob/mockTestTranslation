@@ -95,3 +95,36 @@ On accepting, the output generated will be written back into `intent.json` file'
 
 - [x] Edit functionality fixed: The generated output can be edited by the user, and on clicking `Accept`, the edited output is written into 'intent.json'.
 - [x] Response functionality added: User can give a feedback to the output generated, and on clicking `Respond`, the output gets regenerated, and can be reviewed (accept/edit/respond/ignore) by the user further.
+
+
+## Dockerized reflections + agent inbox (setup)
+The Agent Inbox image is pushed as `docker-master.cdaas.oraclecloud.com/docker-cxsales-dev/agent-inbox:0.0.1`
+
+To run the reflections graph along with it, build the `langgraph-project` image using:
+```
+docker build -t langgraph-project .
+```
+
+In a new terminal, start the ollama server:
+```
+ollama serve
+```
+
+Run the services:
+```
+docker compose up
+```
+
+To run the reflection graph with the trace as the input, run below commands in a new terminal:
+```
+source venv/bin/activate
+python3 apicall.py
+```
+
+The Agent Inbox UI should be running at [localhost:3000](http://localhost:3000), where the interrupt from the graph's new thread wuuld be ready to be handled.
+While in interrupted state (Human node), add a new inbox in Agent Inbox UI with following details:
+1. Graph ID: `agent`
+2. Deployment URL: `http://127.0.0.1:2024`
+3. Name: (any name of your choice)
+
+Only on accepting, the output generated will be written back into `intent.json` file's `traces` field.

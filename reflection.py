@@ -213,8 +213,8 @@ def writeback(state: Intent):
     return state
     
 
-
-llm=ChatOllama(model="llama3.2:latest")
+ChatOllama.model_rebuild()
+llm=ChatOllama(model="llama3.2:latest", base_url="http://host.docker.internal:11434")
 llm_reflector=llm.with_structured_output(Reflection)
 llm_trace_generator=llm.with_structured_output(Intent)    
 
@@ -237,7 +237,6 @@ graph=graph_builder.compile()
 state = Intent()
 config={"configurable":{"thread_id":uuid.uuid4()}}
 print("\nINVOKING GRAPH\n")
-result=graph.invoke(state)
 print("\nDONE W GRAPH\n")
 
 

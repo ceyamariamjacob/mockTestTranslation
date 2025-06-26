@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  langgraph-project:
+    image: langgraph-project
+    container_name: langgraph-project
+    ports:
+      - "2024:2024"
+    restart: unless-stopped
+    volumes:
+      - /Users/cmjacob/Desktop/mock:/app
+    
+  agent-inbox:
+    image: docker-master.cdaas.oraclecloud.com/docker-cxsales-dev/agent-inbox:0.0.1
+    container_name: agent-inbox
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
